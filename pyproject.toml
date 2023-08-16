@@ -1,0 +1,84 @@
+[tool.poetry]
+name = "lvmmag"
+version = "0.1.0a0"
+description = "A pipeline for reduction of multiobject and IFU data"
+authors = ["José Sánchez-Gallego <gallegoj@uw.edu>"]
+license = "BSD-3-Clause"
+readme = "README.md"
+homepage = "https://github.com/albireox/lvmmag"
+repository = "https://github.com/albireox/lvmmag"
+keywords = ["astronomy", "software"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Documentation :: Sphinx",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[tool.poetry.dependencies]
+python = "^3.10,<3.13"
+click = "^8.0.0"
+rich = "^13.5.2"
+pandas = "^2.0.3"
+healpy = "^1.16.4"
+pyphot = "^1.4.4"
+gaiaxpy = "^2.1.0"
+sdssdb = "^0.6.5"
+
+[tool.poetry.group.dev.dependencies]
+ipython = ">=8.14.0"
+ipdb = ">=0.13.3"
+toml = ">=0.10.0"
+pytest = ">=6.0.0"
+pytest-sugar = ">=0.9.4"
+pytest-cov = ">=2.10.0"
+pytest-mock = ">=3.2.0"
+pytest-asyncio = ">=0.14.0"
+codecov = ">=2.1.8"
+twine = ">=3.1.1"
+wheel = ">=0.33.6"
+black = {version = ">=20.8b1", allow-prereleases = true}
+ruff = ">=0.0.282"
+
+[tool.poetry.scripts]
+lvmmag = "lvmmag.__main__:lvmmag"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+fast = true
+
+[tool.ruff]
+line-length = 88
+target-version = 'py311'
+select = ["E", "F", "I"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F403", "F401", "E402"]
+
+[tool.ruff.isort]
+known-first-party = ["lvmmag"]
+lines-after-imports = 2
+section-order = ["future", "standard-library", "typing", "third-party", "sdss", "first-party", "local-folder"]
+
+[tool.ruff.isort.sections]
+typing = ["typing"]
+sdss = ["sdsstools"]
+
+[tool.pytest.ini_options]
+addopts = "--cov lvmmag --cov-report html --cov-report xml --cov-report term"
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+branch = true
+include = ["*/src/lvmmag/*"]
+omit = [
+    "*/__main__.py",
+    "*/__init__.py",
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
