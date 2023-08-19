@@ -153,7 +153,7 @@ def query_healpix(ipix: int, order: int, nest: bool = True, **cone_search_kwargs
 
     # Get the maximum "radius" of the nside pixels. We use this for the initial
     # cone search to get at least all the possible targets in the pixel.
-    radius = healpy.max_pixrad(nside, degrees=True) / 2
+    radius = healpy.max_pixrad(nside, degrees=True)
 
     cone_search_kwargs.update({"ra": ra, "dec": dec, "radius": radius})
     data = cone_search(**cone_search_kwargs)
