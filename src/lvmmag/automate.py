@@ -15,8 +15,6 @@ from functools import partial
 
 import healpy
 import numpy
-import pandas
-import pandas.io
 import rich.progress
 from sdssdb.peewee.sdss5db import database
 
@@ -43,7 +41,7 @@ def _query_ipix(
     user: str | None = None,
     host: str | None = None,
     port: int | None = None,
-) -> tuple[int, pandas.DataFrame]:
+):
     """Runs the HEALPix query for an ipix."""
 
     from sdssdb import PeeweeDatabaseConnection
@@ -56,44 +54,27 @@ def _query_ipix(
 
     if ipix_path.exists():
         if overwrite is False:
-            df = pandas.read_hdf(str(ipix_path))
-            assert isinstance(df, pandas.DataFrame)
-            return (ipix, df)
+            return
         else:
             ipix_path.unlink()
 
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore")
-        ipix_data = query_healpix(
-            ipix,
-            healpy.nside2order(nside),
-            max_gmag=max_gmag,
-            connection=task_connection,
-        )
+    ipix_data = query_healpix(
+        ipix,
+        healpy.nside2order(nside),
+        max_gmag=max_gmag,
+        connection=task_connection,
+    )
 
-        store = pandas.HDFStore(str(ipix_path), complevel=9, complib="blosc")
-        store.put("data", ipix_data)
-        storer = store.get_storer("data")  # type: ignore
-        storer.attrs.healpix = {"nside": nside, "ipix": ipix}
-        store.close()
-
-    return (ipix, ipix_data)
-
-
-def _add_mags(data: pandas.DataFrame, output_path: pathlib.Path, nside: int, ipix: int):
-    """Adds the flux and magnitudes to the dataframe and updates the file."""
-
-    fname = _get_fname(nside, ipix)
-    ipix_path = output_path / fname
-
-    sflux = numpy.array(data.flux.tolist())
+    sflux = numpy.array(ipix_data.flux.tolist())
     mags = calculate_magnitudes(sflux, filter_type="optimistic")
 
-    data[["lflux", "lmag_ab", "lmag_vega"]] = mags
+    ipix_data[["lflux", "lmag_ab", "lmag_vega"]] = mags
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore")
-        data.to_hdf(str(ipix_path), "data", mode="w", complevel=9, complib="blosc")
+        ipix_data.to_hdf(str(ipix_path), "data", mode="w", complevel=9, complib="blosc")
+
+    return
 
 
 def automate(
@@ -167,8 +148,7 @@ def automate(
     )
 
     with multiprocessing.Pool(processes=processes) as pool:
-        for ipix, data in pool.imap(_query_ipix_partial, list(range(n_pixels))):
-            _add_mags(data, output_path, nside, ipix)
+        for _ in pool.imap(_query_ipix_partial, list(range(n_pixels))):
             progress.advance(query_task)
 
     progress.update(query_task, description="[green]Querying complete")
