@@ -16,6 +16,7 @@ classifiers = [
     "Topic :: Documentation :: Sphinx",
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
+include = ["src/lvmmag/data"]
 
 [tool.poetry.dependencies]
 python = "^3.10,<3.13"
@@ -24,8 +25,7 @@ rich = "^13.5.2"
 pandas = "^2.0.3"
 healpy = "^1.16.4"
 pyphot = "^1.4.4"
-gaiaxpy = "^2.1.0"
-sdssdb = "^0.6.5"
+sdssdb = "^0.6.6"
 
 [tool.poetry.group.dev.dependencies]
 ipython = ">=8.14.0"
@@ -41,9 +41,7 @@ twine = ">=3.1.1"
 wheel = ">=0.33.6"
 black = {version = ">=20.8b1", allow-prereleases = true}
 ruff = ">=0.0.282"
-
-[tool.poetry.scripts]
-lvmmag = "lvmmag.__main__:lvmmag"
+pandas-stubs = "^2.0.3.230814"
 
 [tool.black]
 line-length = 88
