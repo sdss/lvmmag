@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "lvmmag"
 version = "0.1.0a0"
-description = "A pipeline for reduction of multiobject and IFU data"
+description = "LVM synthetic magnitude generator for guider cameras"
 authors = ["José Sánchez-Gallego <gallegoj@uw.edu>"]
 license = "BSD-3-Clause"
 readme = "README.md"
