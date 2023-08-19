@@ -5,8 +5,8 @@ description = "LVM synthetic magnitude generator for guider cameras"
 authors = ["José Sánchez-Gallego <gallegoj@uw.edu>"]
 license = "BSD-3-Clause"
 readme = "README.md"
-homepage = "https://github.com/albireox/lvmmag"
-repository = "https://github.com/albireox/lvmmag"
+homepage = "https://github.com/sdss/lvmmag"
+repository = "https://github.com/sdss/lvmmag"
 keywords = ["astronomy", "software"]
 classifiers = [
     "Development Status :: 4 - Beta",
